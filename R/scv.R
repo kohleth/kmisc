@@ -1,6 +1,3 @@
-
-
-
 #' Create Stratified (Cross-)Validation Set
 #' 
 #' It creates stratified (cross-)validation folds from data according to formula, so that all levels of all factors in \code{formula} are as balancely scattered as possible. 
@@ -28,7 +25,8 @@ createSCV = function(form, data, k = 5) {
     form = .getrhsfactor(form, data)
     id = 1:nrow(data)
     alloc = numeric(nrow(data))
-    formu = as.formula(paste("id", paste0(as.character(form), collapse = ""), collapse = ""))
+    formu = as.formula(paste("id", paste0(as.character(form), collapse = ""), 
+        collapse = ""))
     dump = aggregate(formu, data = data, function(x, k) {
         if (length(x) >= k) {
             alloc[x] <<- sample(rep(1:k, length.out = length(x)))
@@ -46,7 +44,8 @@ createSV = function(form, data, valid_prob = 0.2) {
     form = .getrhsfactor(form, data)
     id = 1:nrow(data)
     alloc = numeric(nrow(data))
-    formu = as.formula(paste("id", paste0(as.character(form), collapse = ""), collapse = ""))
+    formu = as.formula(paste("id", paste0(as.character(form), collapse = ""), 
+        collapse = ""))
     dump = aggregate(formu, data = data, function(x) {
         if (length(x) <= 2) {
             alloc[x] <<- 1:length(x)
@@ -63,6 +62,6 @@ createSV = function(form, data, valid_prob = 0.2) {
 .getrhsfactor = function(form, data) {
     form = formula(delete.response(terms(form, data = data)))  ## delete LHS
     vartype = lapply(data.frame(data[all.vars(form)]), class)  ## work out variable class
-    vars = all.vars(form)[sapply(vartype,function(x)"factor"%in%x)]  ## remove numeric variables
+    vars = all.vars(form)[sapply(vartype, function(x) "factor" %in% x)]  ## remove numeric variables
     formula(paste0("~", paste(vars, collapse = "+")))  ## form formula
 } 

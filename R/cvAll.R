@@ -1,5 +1,3 @@
-
-
 #' (Cross) Validate all nested models
 #' 
 #' It fits all subset regression, allowing interaction and categorical covariates, and (cross) validates them.
@@ -39,10 +37,8 @@ cvAll = function(x, data, method, k, ...) UseMethod("cvAll")
 
 #' @export
 # @rdname cvAll
-cvAll.default <- function(x, data, method = "lm", k = 5, lossfn = .calcMSE, ind=NULL,finalfit = TRUE, 
-    ...) {
-    ## Splliting out a validation set
-  if(is.null(ind))ind = createSCV(form = x, data = data, k = k)
+cvAll.default<- function(x, data, k, lossfn, 
+    ind, finalfit, ...) {
     ## Train the models ---------------------
     pred = plyr::alply(1:k, 1, function(j) {
         train_dat = subset(data, ind != j)
@@ -52,37 +48,52 @@ cvAll.default <- function(x, data, method = "lm", k = 5, lossfn = .calcMSE, ind=
     })
     pred = do.call(rbind, pred)
     pred = pred[order(pred[, "id"]), -1]
-    loss = apply(pred, 2, lossfn, obs = model.frame(formula(x), data = data, na.action = NULL)[, 
-        1])
+    loss = apply(pred, 2, lossfn, obs = model.frame(formula(x), data = data, 
+        na.action = NULL)[, 1])
     if (finalfit == TRUE) {
         ## Fitting the models -------------------------
         models <- fitAll(x = x, data = data)
         names(models) <- seq_along(models)
         return(structure(loss, models = models))
     } else {
-        forms = .getAllForm(x,data)
-        return(structure(loss, models = forms, data = data))
+        forms = getAllForm(x, data,class=class(x))
+        return(structure(loss, models = forms))
     }
     
 }
 
 #' @export
 # @rdname cvAll
-cvAll.lm = function(x, data, method = "lm", k=5, ...) 
-  cvAll.default(x = formula(x), 
-    data = data, method = method, ...)
+cvAll.lm = function(x, data, k = 5, lossfn = .calcMSE, 
+                    ind=NULL, finalfit = TRUE, ...){
+  ## Splliting out a validation set
+  if (is.null(ind)) 
+    ind = createSCV(form = formula(x), data = data, k = k)
+  cvAll.default(x=x,data=data,k=k,ind=ind,lossfn=lossfn,finalfit=finalfit,...)
+  
+  }
 
-.calcMSE = function(pred, obs) mean((pred - obs)^2, na.rm = TRUE) 
 
-cvAll.lme=function(x,data,k=5,...){
-  if(!inherits(x,"lme"))stop("x must be an lme object")
- cvAll.default(x=x,data=data,k=k,...)
+cvAll.lme = function(x, data, k = 5, lossfn = .calcMSE, 
+                     ind=NULL, finalfit = TRUE, ...) {
+  ## Splliting out a validation set
+  if (is.null(ind)){
+    fixed=all.vars(x$call$fixed)
+    random=all.vars(x$call$random)
+    ind = createSCV(form =  reformulate(c(fixed,random)), data = data, k = k)
+  } 
+
+  cvAll.default(x=x,data=data,k=k,ind=ind,lossfn=lossfn,finalfit=finalfit,...)
   
 }
 
-cvAll.merMod=function(x,data,k=5,...){
-  if(!inherits(x,"asreml"))stop("x must be an lme object")
-  cvAll.default(x=x,data=data,k=k,...)
+cvAll.merMod =  function(x, data, k = 5, lossfn = .calcMSE, 
+                         ind=NULL, finalfit = TRUE, ...) {
+  ## Splliting out a validation set
+  if (is.null(ind)) 
+    ind = createSCV(form = x, data = data, k = k)
+  cvAll.default(x=x,data=data,k=k,ind=ind,lossfn=lossfn,finalfit=finalfit,...)
   
 }
-
+ 
+.calcMSE = function(pred, obs) mean((pred - obs)^2, na.rm = TRUE)

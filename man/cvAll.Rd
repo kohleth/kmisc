@@ -3,7 +3,7 @@
 \name{cvAll}
 \alias{cvAll}
 \alias{validateAll}
-\title{Cross Validate all nested models}
+\title{(Cross) Validate all nested models}
 \usage{
 cvAll(x, data, method, k, ...)
 
@@ -16,12 +16,12 @@ validateAll(x, data, method, valid_prob, ...)
 
 \item{method}{Currently must be 'lm'}
 
-\item{k}{Postive integer. k-fold cross validation is carried out.}
+\item{k}{Postive integer. k-fold cross validation is carried out. Defaults to 5.}
 
 \item{valid_prob}{Positive number between 0 and 1.
 It is the proportion of data used in the validation set.}
 
-\item{loosfn}{A function with 2 arguments. The first takes an array of predicted value, the second takes a vector of observed value.
+\item{lossfn}{A function with 2 arguments. The first takes an array of predicted value, the second takes a vector of observed value.
 Then it calculates the loss.
 It defaults to a function which calculates the mean sqaured error (MSE).#'}
 
@@ -35,11 +35,11 @@ An array of losses. This array also has a number of attributes:
 \code{data} The data used in the fitting.
 }
 \description{
-It fits all subset regression, allowing interaction and categorical covariates, and cross validates them.
+It fits all subset regression, allowing interaction and categorical covariates, and (cross) validates them.
 The code borrows heavily from package \code{meifly}.
 }
 \examples{
-## Using cvAll with formula class
+## Using cvAll
 \donttest{
 allreg=cvAll(conc~uptake*Treatment,CO2)
 allreg
@@ -48,10 +48,11 @@ attr(allreg,'models')
 calcmae=function(pred,obs)mean(abs(pred-obs),na.rm=TRUE)
 allreg=cvAll(conc~uptake*Treatment,CO2,lossfn=calcmae)
 
-## Using fitall with lm class
+## Using cvAll with class lm
 lm0=lm(conc~uptake*Treatment,CO2)
 allreg2=cvAll(lm0,CO2)
 
+## Using validateAll
 allreg=validateAll(conc~uptake*Treatment,CO2)
 }
 }
