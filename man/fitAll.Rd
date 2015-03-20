@@ -20,6 +20,10 @@ fitAll(x, data, ...)
 \item{x}{A model \code{object} of one of the classes supported.}
 
 \item{data}{Data.}
+
+\item{description}{Text to print for progress bar.}
+
+\item{progress}{\code{TRUE/FALSE}. If TRUE progress bar is shown.}
 }
 \value{
 A list with n components. n is the number of models fitted.

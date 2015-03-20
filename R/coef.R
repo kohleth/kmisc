@@ -2,17 +2,17 @@
 #' 
 #' It exract coefficients from ensemble object.The code borrows heavily from package \code{meifly}.
 #' 
-#' @param object Ensemble object. Output from \code{\link{fitall}}
+#' @param object Output from \code{fitAll}.
 #' @return A data.frame with coefficients.
 #' @examples
 #' \donttest{
-#' allreg=fitall(conc~uptake*Treatment,CO2)
+#' allreg=fitAll(conc~uptake*Treatment,CO2)
 #' coef(allreg)
 #' }
 
-#' @describeIn coef
-coef.ensemble = function(object, ...) {
-    coefs <- plyr::ldply(object, .coef_simple, data = attr(object, "data"))
+#' @export
+coef.allFit = function(object, ...) {
+    coefs <- plyr::ldply(object, .coef_simple)
     names(coefs)[1] <- "model"
     coefs$model <- factor(coefs$model)
     all <- expand.grid(model = unique(coefs$model), variable = unique(coefs$variable))
@@ -25,7 +25,7 @@ coef.ensemble = function(object, ...) {
 }
 
 
-.coef_simple = function(model, data) {
+.coef_simple = function(model) {
     trunc <- function(x, trunc) ifelse(abs(x) > trunc, sign(x) * trunc, 
         x)
     coefs <- data.frame(names(coef(model))[-1], summary(model)$coefficients[-1, 

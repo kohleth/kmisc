@@ -4,6 +4,8 @@
 #' 
 #' @param x A model \code{object} of one of the classes supported.
 #' @param data Data.
+#' @param description Text to print for progress bar.
+#' @param progress \code{TRUE/FALSE}. If TRUE progress bar is shown.
 #' @return A list with n components. n is the number of models fitted.
 #' @examples
 #' ## Using fitAll with formula class
@@ -13,7 +15,7 @@
 #' }
 
 #' @export
-fitAll <- function(x, data,...) UseMethod("fitAll")
+fitAll <- function(x, data, ...) UseMethod("fitAll")
 
 
 #' @export
@@ -22,7 +24,7 @@ fitAll.lm <- function(x, data, description = "fitting", progress = TRUE,
     ...) {
     form = formula(x)
     method = class(x)
-    forms = getAllForm(form, class=class(x), ...)
+    forms = getAllForm(form, ...)
     if (progress == TRUE) 
         message(description, " ", length(forms), " models...")
     method <- as.name(method)
@@ -37,12 +39,12 @@ fitAll.lm <- function(x, data, description = "fitting", progress = TRUE,
 
 #' @export
 #' @rdname fitAll 
-fitAll.lme <- function(x, data, description = "fitting", 
-    progress = TRUE, ...) {
+fitAll.lme <- function(x, data, description = "fitting", progress = TRUE, 
+    ...) {
     fixed = formula(x)
     random = as.formula(x$call$random)
     method = class(x)
-    forms = getAllForm(fixed, class=class(x), ...)
+    forms = getAllForm(fixed, ...)
     if (progress == TRUE) 
         message(description, " ", length(forms), " models...")
     method <- as.name(method)
@@ -75,4 +77,4 @@ fitAll.merMod <- function(x, data, description = "fitting", progress = TRUE,
     structure(models, class = "allFit")
 }
 
-
+ 

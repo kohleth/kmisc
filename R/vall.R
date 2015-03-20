@@ -34,6 +34,4 @@ validateAll.default <- function(x, data, method = "lm", valid_prob = 0.2,
 #' @export
 # @rdname cvAll
 validateAll.lm = function(x, data, method = "lm", valid_prob = 0.2, ...) validateAll.default(x = formula(x), 
-    data = data, method = method, ...)
-
- 
+    data = data, method = method, ...) 
