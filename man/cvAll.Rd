@@ -9,18 +9,15 @@
 \alias{validateAll}
 \title{Cross Validate all nested models}
 \usage{
-cvAll(x, data, k, ...)
+cvAll(x, ...)
 
-\method{cvAll}{default}(x, data, k, lossfn, ind, finalfit, ...)
+\method{cvAll}{default}(x, data, k, lossfn = .calcMSE, ind, finalfit = TRUE)
 
-\method{cvAll}{lm}(x, data, k = 5, lossfn = .calcMSE, ind = NULL,
-  finalfit = TRUE, ...)
+\method{cvAll}{lm}(x, data, k = 5, ind = NULL, ...)
 
-\method{cvAll}{lme}(x, data, k = 5, lossfn = .calcMSE, ind = NULL,
-  finalfit = TRUE, ...)
+\method{cvAll}{lme}(x, data, k = 5, ind = NULL, ...)
 
-\method{cvAll}{merMod}(x, data, k = 5, lossfn = .calcMSE, ind = NULL,
-  finalfit = TRUE, ...)
+\method{cvAll}{merMod}(x, data, k = 5, ind = NULL, ...)
 
 validateAll(x, data, method, valid_prob, ...)
 }
@@ -41,11 +38,13 @@ It defaults to a function which calculates the mean sqaured error (MSE).}
 It is the proportion of data used in the validation set.}
 }
 \value{
-An array of losses. This array also has a number of attributes:
+An maxtrix of predictions on the validation set, with the following attributes:
+
+\code{loss} The loss calculated by \code{lossfn}.
+
+\code{data} The data used.
 
 \code{models} The fitted models or just formulae of models, depending on \code{finalfit}.
-
-\code{data} The data used in the fitting.
 }
 \description{
 It fits all subset regression, allowing interaction and categorical covariates, and cross validates them.

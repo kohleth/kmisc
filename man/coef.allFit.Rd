@@ -4,7 +4,7 @@
 \alias{coef.allFit}
 \title{Exract coefficients from ensemble object.}
 \usage{
-\method{coef}{allFit}(object, ...)
+\method{coef}{allFit}(object)
 }
 \arguments{
 \item{object}{Output from \code{fitAll}.}

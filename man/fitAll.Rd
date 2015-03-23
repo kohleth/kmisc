@@ -7,7 +7,7 @@
 \alias{fitAll.merMod}
 \title{All subset regression}
 \usage{
-fitAll(x, data, ...)
+fitAll(x, ...)
 
 \method{fitAll}{lm}(x, data, description = "fitting", progress = TRUE, ...)
 

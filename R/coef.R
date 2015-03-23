@@ -11,7 +11,7 @@
 #' }
 
 #' @export
-coef.allFit = function(object, ...) {
+coef.allFit = function(object) {
     coefs <- plyr::ldply(object, .coef_simple)
     names(coefs)[1] <- "model"
     coefs$model <- factor(coefs$model)

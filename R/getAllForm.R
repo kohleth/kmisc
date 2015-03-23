@@ -18,7 +18,10 @@ getAllForm = function(x) {
     form[[1]] <- paste(deparse(fixed[[2]]), "~1")
     if (!is.null(.findBar(x))) 
         form <- paste(form, .findBar(x), sep = "+")
-    form <- lapply(form, as.formula, env = baseenv())
+#     form <- lapply(form, as.formula, env = baseenv())
+    form <- lapply(form, as.formula)
+
+#     environment(form)=environment(x)
     form
 }
 

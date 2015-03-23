@@ -15,7 +15,7 @@
 #' }
 
 #' @export
-fitAll <- function(x, data, ...) UseMethod("fitAll")
+fitAll <- function(x, ...) UseMethod("fitAll")
 
 
 #' @export
@@ -24,7 +24,7 @@ fitAll.lm <- function(x, data, description = "fitting", progress = TRUE,
     ...) {
     form = formula(x)
     method = class(x)
-    forms = getAllForm(form, ...)
+    forms = getAllForm(form)
     if (progress == TRUE) 
         message(description, " ", length(forms), " models...")
     method <- as.name(method)
@@ -44,7 +44,7 @@ fitAll.lme <- function(x, data, description = "fitting", progress = TRUE,
     fixed = formula(x)
     random = as.formula(x$call$random)
     method = class(x)
-    forms = getAllForm(fixed, ...)
+    forms = getAllForm(fixed)
     if (progress == TRUE) 
         message(description, " ", length(forms), " models...")
     method <- as.name(method)
@@ -64,7 +64,7 @@ fitAll.lme <- function(x, data, description = "fitting", progress = TRUE,
 fitAll.merMod <- function(x, data, description = "fitting", progress = TRUE, 
     ...) {
     method = "lmer"
-    forms = getAllForm(formula(x), ...)
+    forms = getAllForm(formula(x))
     if (progress == TRUE) 
         message(description, " ", length(forms), " models...")
     method <- as.name(method)
@@ -75,6 +75,4 @@ fitAll.merMod <- function(x, data, description = "fitting", progress = TRUE,
         TRUE, "text", "none"))
     names(models) <- seq_along(models)
     structure(models, class = "allFit")
-}
-
- 
+} 
