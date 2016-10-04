@@ -7,7 +7,12 @@ Author: Kohleth Chia
 Maintainer: Kohleth Chia <kohleth@gmail.com>
 Description: Functions that Kohleth finds useful.
 License: What license is it under?
-Imports: plyr (>= 1.8.1), lme4 (>= 1.1-7)
+Imports:
+    plyr (>= 1.8.1),
+    lme4 (>= 1.1-7),
+    latticeExtra (>= 0.6-28)
 URL: http://github.com/kohleth/kmisc
 BugReports: http://github.com/kohleth/kmisc/issues
-Suggests: testthat
+Suggests:
+    testthat
+RoxygenNote: 5.0.1
